@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menú Lateral y Formulario</title>
+    <link rel="stylesheet" href="styles/agregaclienta.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
+
+    <script src="js/agrega_cita.js" defer></script>
+    <style>
+        #suggestions {
+            border: 1px solid #ddd;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            background: #fff;
+            color: black;
+            width: calc(100% - 2px);
+            z-index: 1000;
+        }
+        #suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        #suggestions div:hover {
+            background-color: #f0f0f0;
+            color: black;
+        }
+        #sg {
+            border: 1px solid #ddd;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            background: #fff;
+            color: black;
+            width: calc(100% - 2px);
+            z-index: 1000;
+        }
+        #sg div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        #sg div:hover {
+            background-color: #f0f0f0;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">TRESIA STUDIO</div>
+        <ul class="nav-links">
+            <li><a href="home.php">Inicio</a></li>
+            <li class="dropdown">
+                <a href="#">Citas</a>
+                <ul class="sub-menu">
+                    <li><a href="tabla.html">Registra Cita</a></li>
+                    <li><a href="tabla3.php">Consulta Citas</a></li>
+                    <li><a href="agenda.html">Agenda de Citas</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Clientas</a>
+                <ul class="sub-menu">
+                    <li><a href="agrega_cliente.html">Registra Clientas</a></li>
+                    <li><a href="consulta_cllientes.html">Consulta Clientas</a></li>
+                    <li><a href="cumpleaños.html">Cumpleaños Clientas</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Colaboradoras</a>
+                <ul class="sub-menu">
+                    <li><a href="colaboradoras.html">Registra Colaboradoras</a></li>
+                    <li><a href="consulta_colaboradoras.php">Consulta Colaboradoras</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Servicios</a>
+                <ul class="sub-menu">
+                    <li><a href="servicios.html">Agrega Servicio</a></li>
+                    <li><a href="consulta_servicios.html">Consulta Servicios</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Municipios</a>
+                <ul class="sub-menu">
+                    <li><a href="municipios.html">Municipios</a></li>
+                    <li><a href="consulta_municipios.html">Consulta Municipios</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Gastos</a>
+                <ul class="sub-menu">
+                    <li><a href="gastos.html">Agrega Gasto</a></li>
+                    <li><a href="consulta_gastos.php">Consulta Gastos</a></li>
+                    <li><a href="gastos_totales.php">Consulta Gastos Totales</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Inventario</a>
+                <ul class="sub-menu">
+                    <li><a href="agrega_producto.html">Agrega Productos</a></li>
+                    <li><a href="consulta_productos.html">Consulta Productos</a></li>
+                </ul>
+            </li>
+            <li><a href="logout.php">Salir</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <div class="form-container">
+            <h2 id="formTitle">Registrar Cita</h2>
+            <form id="clientaForm">
+                <table>
+                    <tr>
+                        <th>Día</th>
+                        <td><input type="date" name="dia" id="dia"></td>
+                    </tr>
+                    <tr>
+                        <th>Hora</th>
+                        <td><input type="time" name="hora" id="hora"></td>
+                    </tr>
+                    <tr>
+                        <th>Colaboradora</th>
+                        <td>
+                            <select name="idcolaboradora" id="idcolaboradora" required>
+                                <option value="">Seleccione una Colaboradora</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Clienta</th>
+                        <td>
+                            <div style="position: relative;">
+                                <input type="text" id="clientaSearch" autocomplete="off" placeholder="Buscar clienta...">
+                                <div id="suggestions"></div>
+                                <input type="hidden" id="idclienta"> <!-- Campo oculto para almacenar el ID del servicio -->
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Servicio</th>
+                        <td>
+                            <div style="position: relative;">
+                                <input type="text" id="servSearch" autocomplete="off" placeholder="Buscar Servicio.." oninput="filtrarServicios()">
+                                <div id="sg"></div>
+                                <input type="hidden" id="idservicio"> <!-- Campo oculto para almacenar el ID del servicio -->
+                            </div>
+                            
+                        </td>
+                    </tr>                    
+                    <tr>
+                        <th>Descuento</th>
+                        <td><input type="number" name="descuento" min="0" step="0.01" id="descuento" onblur="calcularTotal();"></td>
+                    </tr>
+                    <tr>
+                        <th>Transferencia</th>
+                        <td><input type="number" name="pago_trans" min="0" step="0.01" id="trans"></td>
+                    </tr>
+                    <tr>
+                        <th>Efectivo</th>
+                        <td><input type="number" name="efectivo" min="0" step="0.01" id="efectivo"></td>
+                    </tr>
+                    <tr>
+                        <th>Propina</th>
+                        <td><input type="number" name="propina" min="0" step="0.01" id="propina"></td>
+                    </tr>
+                    <tr>
+                        <th>Total</th>
+                        <td><input type="number" name="total" id="total" disabled></td>
+                    </tr>
+                </table>
+                <input type="submit" id="submitBtn" value="Guardar" class="submit-btn">
+                <div id="message"></div>
+            </form>
+        </div>
+    </div>
+     <!-- Include JS for Select2 -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
+</body>
+</html>

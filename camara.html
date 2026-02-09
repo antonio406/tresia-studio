@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captura Foto en el Video</title>
+    <style>
+        #videoContainer {
+            position: relative;
+            display: inline-block;
+        }
+        #photo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Captura Foto en el Video</h1>
+    <div id="videoContainer">
+        <video id="video" autoplay></video>
+        <canvas id="photoCanvas" style="display:none;"></canvas>
+        <img id="photo" alt="Foto capturada"/>
+    </div>
+    <button id="startButton">Iniciar Cámara</button>
+    <button id="captureButton">Capturar Foto</button>
+    <button id="saveButton">Guardar Foto</button>
+
+    <script>
+        const video = document.getElementById('video');
+        const photo = document.getElementById('photo');
+        const photoCanvas = document.getElementById('photoCanvas');
+        const startButton = document.getElementById('startButton');
+        const captureButton = document.getElementById('captureButton');
+        const saveButton = document.getElementById('saveButton');
+
+        let photoData = '';
+
+        async function startCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (error) {
+                console.error('Error al acceder a la cámara: ', error);
+            }
+        }
+
+        function capturePhoto() {
+            const context = photoCanvas.getContext('2d');
+            photoCanvas.width = video.videoWidth;
+            photoCanvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, photoCanvas.width, photoCanvas.height);
+            photo.src = photoCanvas.toDataURL('image/png');
+            photo.style.display = 'block';
+        }
+
+        function savePhoto() {
+            if (photo.src) {
+                const formData = new FormData();
+                formData.append('photo', photo.src);
+
+                fetch('save_photo.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    console.log('Foto guardada: ', data);
+                })
+                .catch(error => {
+                    console.error('Error al guardar la foto: ', error);
+                });
+            } else {
+                alert('No hay foto para guardar.');
+            }
+        }
+
+        startButton.addEventListener('click', startCamera);
+        captureButton.addEventListener('click', capturePhoto);
+        saveButton.addEventListener('click', savePhoto);
+    </script>
+</body>
+</html>

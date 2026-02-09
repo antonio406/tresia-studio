@@ -1,0 +1,69 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: rgb(249,206,224);
+background: linear-gradient(0deg, rgba(249,206,224,1) 0%, rgba(254,120,250,1) 63%, rgba(249,206,224,1) 100%);
+    --background-color: #ee78de;
+    /*#ffe6f2*/
+    border-radius: 2px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.login-container {
+    background-image: url('logotresia.jpg'); /* Replace 'your-image.jpg' with the path to your background image */
+    background-size: cover;
+    background-position: center;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    width: 300px;
+    text-align: center;
+    color: #fff; /* Ensures text is readable over the background image */
+    border: 2px solid #ffffff; /* White border around the container */
+}
+
+h1 {
+    margin-bottom: 30px;
+    color: #fff;
+}
+
+.input-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ffb3d9;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.8); /* Slight transparency to show the background image */
+    color: #333; /* Dark text for input fields */
+}
+
+button {
+    background-color: #ff66b2;
+    color: #fff;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #ff3385;
+}

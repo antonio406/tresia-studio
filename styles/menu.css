@@ -1,0 +1,128 @@
+body {
+    background: linear-gradient(to right, rgba(241,147,221,1) 135px, #000000 115px);
+    color: #ffffff; /* Texto blanco para contraste */
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+}
+
+.sidebar {
+    width: 115px;
+    background: rgb(241,147,221);
+    background: linear-gradient(90deg, rgba(241,147,221,1) 54%, rgba(213,12,231,0.35057773109243695) 100%);
+    color: #fff;
+    padding: 20px 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    height: 100%;
+    transition: width 0.3s ease;
+    overflow: hidden;
+}
+
+.sidebar:hover {
+    width: 310px;
+}
+
+.content {
+    --color: #bb2727;
+    margin-left: 60px;
+    padding: 20px;
+    width: calc(100% - 60px);
+    transition: margin-left 0.3s ease;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff; /* Rosa oscuro */
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+ul.nav-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: #333;
+    display: flex;
+    flex-direction: column;
+    width: 100px; /* Ancho del menú principal */
+}
+
+ul.nav-links > li {
+    position: relative;
+}
+
+ul.nav-links a {
+    text-decoration: none;
+    padding: 12px 16px;
+    display: block;
+    color: #ffffff;
+    background: rgb(241,147,221);
+    background: linear-gradient(90deg, rgba(241,147,221,1) 70%, #d31fc4 100%);
+}
+
+ul.nav-links a:hover {
+    background-color: #660759;
+}
+
+/* Submenú oculto inicialmente */
+ul.sub-menu {
+    display: none;
+    position: absolute;
+    left: 130px; /* Ajusta la distancia del submenú al menú principal */
+    top: 0;
+    background-color: #bb2727;
+    padding: 0;
+    list-style-type: none;
+    min-width: 200px; /* Ancho mínimo del submenú */
+    z-index: 1000; /* Asegura que el submenú se superponga correctamente */
+}
+
+/* Mostrar submenú al pasar el mouse */
+.dropdown:hover > .sub-menu {
+    display: block;
+}
+
+/* Estilo de los elementos del submenú */
+ul.sub-menu li a {
+    padding: 10px;
+    color: #fff;
+    background-color: #c308fc;
+}
+
+ul.sub-menu li a:hover {
+    background-color: #000000;
+}
+
+/* Estilo del menú principal cuando hay un submenú abierto */
+ul.nav-links li.dropdown:hover > a {
+    width: 100px;
+    background-color: #555;
+}
+
+
+.sidebar:hover ~ .content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+}
+
+img.swing-image {
+    margin-top: 30px;
+    animation: swing 3s ease-in-out infinite;
+}
+
+/* Animación para el efecto de columpio */
+@keyframes swing {
+    0% {
+        transform: rotate(-5deg);
+    }
+    50% {
+        transform: rotate(5deg);
+    }
+    100% {
+        transform: rotate(-5deg);
+    }
+}
+/**css tabla 1*/

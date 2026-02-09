@@ -1,0 +1,34 @@
+ SELECT
+ c.total_citas,
+   g.total_gastos,
+        g.total_ingresos_adicionales,
+         (c.total_citas + g.total_ingresos_adicionales - g.total_gastos) AS total_general
+     FROM (
+         SELECT COALESCE(SUM(total), 0) AS total_citas
+         FROM citas
+         WHERE dia BETWEEN '2024-09-01' AND '2024-09-01'
+     ) c
+     CROSS JOIN (
+         SELECT
+             COALESCE(SUM(CASE WHEN tipo = 'gasto' THEN monto ELSE 0 END), 0) AS total_gastos,
+             COALESCE(SUM(CASE WHEN tipo = 'ingreso' THEN monto ELSE 0 END), 0) AS total_ingresos_adicionales
+         FROM gastos
+         WHERE fecha BETWEEN '2024-09-01' AND '2024-09-01'
+     ) g;
++-------------+--------------+----------------------------+---------------+
+| total_citas | total_gastos | total_ingresos_adicionales | total_general |
++-------------+--------------+----------------------------+---------------+
+|        4668 |          160 |                        470 |          4978 |
++-------------+--------------+----------------------------+---------------+
+
+-- Insertar registros de ingresos
+INSERT INTO gastos (fecha, descripcion, monto, tipo) VALUES
+('2024-09-01', 'Venta de accesorios A', 200.00, 'ingreso'),
+('2024-09-01', 'Venta de accesorios B', 200.00, 'ingreso'),
+('2024-09-01', 'Venta de accesorios C', 100.00, 'ingreso');
+
+-- Insertar registros de gastos
+INSERT INTO gastos (fecha, descripcion, monto, tipo) VALUES
+('2024-09-01', 'Compra de materiales', 50.00, 'gasto'),
+('2024-09-01', 'Pago de electricidad', 50.00, 'gasto'),
+('2024-09-01', 'Mantenimiento de equipo', 30.00, 'gasto');

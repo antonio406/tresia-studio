@@ -1,0 +1,104 @@
+BASE DE DATOS TRESIA STUDIO
+
+CREATE DATABASE tresia_studio;
+
+USE tresia_studio;
+
+CREATE TABLE users(
+user varchar(10) PRIMARY KEY,
+password varchar(50) not null,
+name varchar(50) not null,
+apellidop varchar(50) not null,
+apellidom varchar(50) not null);
+
+INSERT INTO users VALUES ('tresia','tresia2024','JEFA TRESIA','FALTA VALIDAR','FALTA VALIDAR DOS');
+
+CREATE TABLE municipios(
+  idmunicipio int auto_increment PRIMARY KEY,
+  nombre varchar(80));
+
+CREATE TABLE servicios(
+idservicio int PRIMARY KEY AUTO_INCREMENT,
+nombre varchar(100),
+estatus boolean,
+descripción varchar(150));
+
+CREATE TABLE colaboradoras(
+    idcolaboradora INT PRIMARY KEY AUTO_INCREMENT,
+    nombre varchar(30),
+    edad int,
+    expertaen varchar(50),
+    horario_laboral varchar(50),
+    diaslaborales int,
+    comisión double,
+    antigüedad varchar(50),
+    uniforme_proporcionado varchar(80),
+    material_para_trabajo varchar(50),
+    observaciones varchar(50),
+    estatus boolean
+);
+
+CREATE TABLE citas(
+    idcitas INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    dia DATE,
+    hora TIME NOT NULL,
+    descuento DOUBLE,
+    transferencia DOUBLE,
+    efectivo DOUBLE,
+    propina DOUBLE,
+    total DOUBLE,
+    idcolaboradora int,
+    idclienta int,
+    idservicio int,
+    FOREIGN KEY (idcolaboradora) REFERENCES colaboradoras(idcolaboradora),
+    FOREIGN KEY (idclienta) REFERENCES clientas(idclienta),
+    FOREIGN KEY (idservicio) REFERENCES servicios(idservicio));
+CREATE TABLE clientas (
+    idclienta INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(30),
+    fecha DATE,
+    edad INT,
+    sexo VARCHAR(20),
+    ocupacion VARCHAR(30) NOT NULL,
+    colonia VARCHAR(50),
+    calle VARCHAR(30),
+    cp INT,
+    idmunicipio INT,
+    fecha_nacimiento VARCHAR(50),
+    numerotelefonico INT,
+    alergias  VARCHAR(50),
+    patalogias_activas VARCHAR(50),
+    lentes_contacto_armazon VARCHAR(30),
+    saber_nosotros VARCHAR(50),
+    p_recomendadas VARCHAR(50),
+    observaciones VARCHAR(50),
+    estatus boolean,
+    FOREIGN KEY (idmunicipio) REFERENCES municipios(idmunicipio)
+);
+
+CREATE TABLE gastos (
+    idgasto INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    fecha DATE NOT NULL,
+    descripcion VARCHAR(255),
+    monto DOUBLE,
+    tipo ENUM('ingreso', 'gasto') NOT NULL
+);
+
+CREATE TABLE Inventario (
+    idproducto INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    descripcion VARCHAR(255),
+    unidad DOUBLE,
+    precio DOUBLE
+);
+
+
+SELECT c.*,m.nombre
+FROM clientas c
+INNER JOIN municipios m on (m.idmunicipio = c.idmunicipio);
+
+SELECT ci.*,cl.nombre as colaboradora ,c.nombre as clienta,s.nombre
+FROM citas ci
+INNER JOIN colaboradoras cl on (ci.idcolaboradora = cl.idcolaboradora)
+INNER JOIN clientas c on (c.idclienta = ci.idclienta)
+INNER JOIN servicios s on (s.idservicio = ci.idservicio)
+
