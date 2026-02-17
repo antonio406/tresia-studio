@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,14 +22,17 @@
             width: calc(100% - 2px);
             z-index: 1000;
         }
+
         #suggestions div {
             padding: 8px;
             cursor: pointer;
         }
+
         #suggestions div:hover {
             background-color: #f0f0f0;
             color: black;
         }
+
         #sg {
             border: 1px solid #ddd;
             max-height: 200px;
@@ -39,16 +43,136 @@
             width: calc(100% - 2px);
             z-index: 1000;
         }
+
         #sg div {
             padding: 8px;
             cursor: pointer;
         }
+
         #sg div:hover {
             background-color: #f0f0f0;
             color: black;
         }
+
+        .form-wrapper {
+            display: flex;
+            gap: 30px;
+            align-items: flex-start;
+            width: 100%;
+        }
+
+        /* El formulario ocupa todo el espacio disponible */
+        .form-container {
+            flex: 1;
+            /* Toma todo el ancho posible */
+            min-width: 400px;
+            /* Evita que se haga flaco */
+        }
+
+        /* La nota tiene ancho fijo */
+        .note-container {
+            margin-top: 270px;
+            margin-right: 20px;
+            width: 300px;
+            flex-shrink: 0;
+            /* Evita que se reduzca */
+        }
+
+
+        .note-container h3 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #444;
+        }
+
+        /* INPUTS IRREALES */
+        .fake-inputs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .fake-inputs label {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .fake-inputs input {
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .fake-inputs input:focus {
+            outline: none;
+            border-color: #c9a4ff;
+            box-shadow: 0 0 0 2px rgba(201, 164, 255, 0.2);
+        }
+
+        /* Ocultar spinners de inputs numéricos */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            border: 1px solid #dcdde1;
+            border-radius: 4px;
+            padding: 5px;
+        }
+
+        /* Estilos para los controladores de cantidad */
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            background: #fff;
+            padding: 2px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .btn-qty {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 6px;
+            background: #f3e8ff;
+            color: #7c3aed;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .btn-qty:hover {
+            background: #7c3aed;
+            color: #fff;
+        }
+
+        .btn-qty:active {
+            transform: scale(0.95);
+        }
+
+        .denomination-label {
+            font-weight: 500;
+            color: #444;
+            min-width: 50px;
+        }
     </style>
 </head>
+
 <body>
     <div class="sidebar">
         <div class="logo">TRESIA STUDIO</div>
@@ -116,11 +240,11 @@
                 <table>
                     <tr>
                         <th>Día</th>
-                        <td><input type="date" name="dia" id="dia"></td>
+                        <td><input type="date" name="dia" id="dia" required></td>
                     </tr>
                     <tr>
                         <th>Hora</th>
-                        <td><input type="time" name="hora" id="hora"></td>
+                        <td><input type="time" name="hora" id="hora" required></td>
                     </tr>
                     <tr>
                         <th>Colaboradora</th>
@@ -134,9 +258,11 @@
                         <th>Clienta</th>
                         <td>
                             <div style="position: relative;">
-                                <input type="text" id="clientaSearch" autocomplete="off" placeholder="Buscar clienta...">
+                                <input type="text" id="clientaSearch" autocomplete="off" placeholder="Buscar clienta..."
+                                    required>
                                 <div id="suggestions"></div>
-                                <input type="hidden" id="idclienta"> <!-- Campo oculto para almacenar el ID del servicio -->
+                                <input type="hidden" id="idclienta">
+                                <!-- Campo oculto para almacenar el ID del servicio -->
                             </div>
                         </td>
                     </tr>
@@ -144,16 +270,19 @@
                         <th>Servicio</th>
                         <td>
                             <div style="position: relative;">
-                                <input type="text" id="servSearch" autocomplete="off" placeholder="Buscar Servicio.." oninput="filtrarServicios()">
+                                <input type="text" id="servSearch" autocomplete="off" placeholder="Buscar Servicio..."
+                                    oninput="filtrarServicios()" required>
                                 <div id="sg"></div>
-                                <input type="hidden" id="idservicio"> <!-- Campo oculto para almacenar el ID del servicio -->
+                                <input type="hidden" id="idservicio">
+                                <!-- Campo oculto para almacenar el ID del servicio -->
                             </div>
-                            
+
                         </td>
-                    </tr>                    
+                    </tr>
                     <tr>
                         <th>Descuento</th>
-                        <td><input type="number" name="descuento" min="0" step="0.01" id="descuento" onblur="calcularTotal();"></td>
+                        <td><input type="number" name="descuento" min="0" step="0.01" id="descuento"
+                                oninput="calcularTotal();"></td>
                     </tr>
                     <tr>
                         <th>Transferencia</th>
@@ -161,15 +290,254 @@
                     </tr>
                     <tr>
                         <th>Efectivo</th>
-                        <td><input type="number" name="efectivo" min="0" step="0.01" id="efectivo"></td>
+                        <td>
+                            <input type="hidden" name="efectivo" id="efectivo">
+                            <button type="button" id="toggleDesglose"
+                                style="margin-left:8px; cursor:pointer; padding:4px 12px; border-radius:6px; border:1px solid #c9a4ff; background:#f3e8ff; color:#7c3aed;">💵
+                                Desglose</button>
+                        </td>
+                    </tr>
+                    <tr id="desgloseRow" style="display:none;">
+                        <td colspan="2">
+                            <div
+                                style="background:#faf5ff; border:1px solid #e0d0f0; border-radius:10px; padding:15px; margin-top:5px; color:#333;">
+
+                                <!-- ===== RESUMEN DE MONTO ===== -->
+                                <div
+                                    style="margin-bottom:15px; padding:10px; background:#e1f5fe; border:1px solid #01579b; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-weight:bold; color:#01579b;">💰 Monto a cubrir en Efectivo:</span>
+                                    <span style="font-size:18px; font-weight:bold; color:#01579b;">$<span
+                                            id="montoEsperadoEfectivo">0.00</span></span>
+                                </div>
+
+                                <!-- ===== PAGO RECIBIDO ===== -->
+                                <h4
+                                    style="margin:0 0 8px 0; color:#7c3aed; border-bottom:1px solid #e0d0f0; padding-bottom:6px;">
+                                    💵 Pago Recibido (lo que da el cliente)</h4>
+                                <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                                    <div style="flex:1; min-width:180px;">
+                                        <strong style="font-size:12px; color:#666;">Billetes</strong>
+                                        <div
+                                            style="display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-top:8px;">
+                                            <span class="denomination-label">$1,000</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b1000', -1)">-</button>
+                                                <input type="number" id="b1000" name="b1000" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b1000', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$500</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b500', -1)">-</button>
+                                                <input type="number" id="b500" name="b500" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b500', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$200</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b200', -1)">-</button>
+                                                <input type="number" id="b200" name="b200" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b200', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$100</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b100', -1)">-</button>
+                                                <input type="number" id="b100" name="b100" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b100', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$50</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b50', -1)">-</button>
+                                                <input type="number" id="b50" name="b50" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b50', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$20</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b20', -1)">-</button>
+                                                <input type="number" id="b20" name="b20" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('b20', 1)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="flex:1; min-width:200px;">
+                                        <strong style="font-size:14px; color:#666;">Monedas</strong>
+                                        <div
+                                            style="display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-top:8px;">
+                                            <span class="denomination-label">$10</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m10', -1)">-</button>
+                                                <input type="number" id="m10" name="m10" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m10', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$5</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m5', -1)">-</button>
+                                                <input type="number" id="m5" name="m5" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m5', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$2</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m2', -1)">-</button>
+                                                <input type="number" id="m2" name="m2" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m2', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$1</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m1', -1)">-</button>
+                                                <input type="number" id="m1" name="m1" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m1', 1)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$0.50</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m050', -1)">-</button>
+                                                <input type="number" id="m050" name="m050" min="0" value="0" oninput="calcularEfectivo()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('m050', 1)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    style="margin-top:8px; text-align:right; font-weight:bold; color:#7c3aed; font-size:15px;">
+                                    Total Recibido: $<span id="subtotalEfectivo">0.00</span>
+                                </div>
+
+                                <!-- ===== LÍNEA DE CAMBIO ===== -->
+                                <div
+                                    style="margin:12px 0; padding:10px; background:#fff3cd; border:1px solid #ffc107; border-radius:8px; display:flex; justify-content:space-between; align-items:center;">
+                                    <span style="font-weight:bold; color:#856404;">🔄 Cambio a devolver:</span>
+                                    <span style="font-size:18px; font-weight:bold; color:#856404;">$<span
+                                            id="cambioDevolver">0.00</span></span>
+                                </div>
+
+                                <!-- ===== CAMBIO DADO ===== -->
+                                <h4
+                                    style="margin:0 0 8px 0; color:#dc3545; border-bottom:1px solid #f0d0d0; padding-bottom:6px;">
+                                    🔄 Cambio Dado (lo que devuelves)</h4>
+                                <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                                    <div style="flex:1; min-width:180px;">
+                                        <strong style="font-size:12px; color:#666;">Billetes</strong>
+                                        <div
+                                            style="display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-top:8px;">
+                                            <span class="denomination-label">$1,000</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c1000', -1, true)">-</button>
+                                                <input type="number" id="c1000" name="c1000" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c1000', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$500</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c500', -1, true)">-</button>
+                                                <input type="number" id="c500" name="c500" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c500', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$200</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c200', -1, true)">-</button>
+                                                <input type="number" id="c200" name="c200" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c200', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$100</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c100', -1, true)">-</button>
+                                                <input type="number" id="c100" name="c100" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c100', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$50</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c50', -1, true)">-</button>
+                                                <input type="number" id="c50" name="c50" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c50', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$20</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c20', -1, true)">-</button>
+                                                <input type="number" id="c20" name="c20" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('c20', 1, true)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div style="flex:1; min-width:200px;">
+                                        <strong style="font-size:14px; color:#666;">Monedas</strong>
+                                        <div
+                                            style="display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:center; margin-top:8px;">
+                                            <span class="denomination-label">$10</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm10', -1, true)">-</button>
+                                                <input type="number" id="cm10" name="cm10" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm10', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$5</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm5', -1, true)">-</button>
+                                                <input type="number" id="cm5" name="cm5" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm5', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$2</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm2', -1, true)">-</button>
+                                                <input type="number" id="cm2" name="cm2" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm2', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$1</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm1', -1, true)">-</button>
+                                                <input type="number" id="cm1" name="cm1" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm1', 1, true)">+</button>
+                                            </div>
+
+                                            <span class="denomination-label">$0.50</span>
+                                            <div class="qty-controls">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm050', -1, true)">-</button>
+                                                <input type="number" id="cm050" name="cm050" min="0" value="0" oninput="calcularCambio()" style="width:50px;">
+                                                <button type="button" class="btn-qty" onclick="changeQty('cm050', 1, true)">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div
+                                    style="margin-top:8px; text-align:right; font-weight:bold; color:#dc3545; font-size:15px;">
+                                    Total Cambio Dado: $<span id="totalCambioDado">0.00</span>
+                                </div>
+
+                                <!-- ===== RESUMEN ===== -->
+                                <div
+                                    style="margin-top:12px; padding:10px; background:#d4edda; border:1px solid #28a745; border-radius:8px; text-align:right;">
+                                    <span style="font-weight:bold; color:#155724; font-size:16px;">💰 Efectivo Neto:
+                                        $<span id="efectivoNeto">0.00</span></span>
+                                </div>
+
+                            </div>
+                        </td>
                     </tr>
                     <tr>
-                        <th>Propina</th>
-                        <td><input type="number" name="propina" min="0" step="0.01" id="propina"></td>
+                        <th>Propina Efectivo</th>
+                        <td><input type="number" name="propina_efectivo" min="0" step="0.01" id="propina_efectivo"></td>
+                    </tr>
+                    <tr>
+                        <th>Propina Transferencia</th>
+                        <td><input type="number" name="propina_trans" min="0" step="0.01" id="propina_trans"></td>
                     </tr>
                     <tr>
                         <th>Total</th>
-                        <td><input type="number" name="total" id="total" disabled></td>
+                        <td>
+                            <input type="hidden" id="precio_base">
+                            <input type="number" name="total" id="total" disabled>
+                        </td>
                     </tr>
                 </table>
                 <input type="submit" id="submitBtn" value="Guardar" class="submit-btn">
@@ -177,8 +545,11 @@
             </form>
         </div>
     </div>
-     <!-- Include JS for Select2 -->
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
+
+
+    <!-- Include JS for Select2 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
 </body>
+
 </html>

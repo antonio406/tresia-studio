@@ -3,7 +3,7 @@
 $servername = 'localhost';
 $dbname = 'tresia_studio';
 $username = 'root';
-$password = 'junio1910';
+$password = '12345678';
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 

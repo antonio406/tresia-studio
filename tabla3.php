@@ -159,7 +159,8 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario'] === 'admin';
                     <th>Descuento</th>
                     <th>Pago por Trans.</th>
                     <th>Efectivo</th>
-                    <th>Propina</th>
+                    <th>P. Efec.</th>
+                    <th>P. Trans.</th>
                     <th>Total</th>
                     <th>Editar</th>
                     <th>Eliminar</th>

@@ -2,8 +2,8 @@ const consultarBtn = document.getElementById('consultarBtn');
 const clientasList = document.getElementById('clientasList');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
-const limit = 10; 
-let offset = 0;   
+const limit = 10;
+let offset = 0;
 
 consultarBtn.addEventListener('click', () => {
     offset = 0; // Reiniciar el desplazamiento
@@ -31,7 +31,7 @@ function cargarClientas() {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', `php/consulta_citas2.php?fecha1=${encodeURIComponent(fecha1)}&fecha2=${encodeURIComponent(fecha2)}&limit=${limit}
     &offset=${offset}&colaboradora=${colaboradora}&clientaa=${clientaa}`, true);
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             if (response.success) {
@@ -50,7 +50,8 @@ function cargarClientas() {
                             <td>%${clienta.descuento}</td>
                             <td>$${clienta.transferencia}</td>
                             <td>$${clienta.efectivo}</td>
-                            <td>$${clienta.propina}</td>
+                            <td>$${clienta.propina_efectivo || 0}</td>
+                            <td>$${clienta.propina_transferencia || 0}</td>
                             <td>$${clienta.total}</td>
                             <td align="center">
                                 <button onclick="editar(${clienta.idcitas});" 
@@ -94,7 +95,7 @@ function cargarClientas() {
 
                 document.getElementById("t").innerText = `Total Transferencias: $${response.transferencia}`;
                 document.getElementById("e").innerText = `Total Efectivo: $${response.efectivo}`;
-                document.getElementById("p").innerText = `Total Propinas: $${response.propina}`;
+                document.getElementById("p").innerText = `Total Propinas: $${response.propina} (Efec: $${response.propina_efectivo} | Trans: $${response.propina_transferencia})`;
                 // Manejar habilitación/deshabilitación de botones de paginación
                 prevBtn.disabled = offset <= 0;
                 nextBtn.disabled = offset + limit >= response.total;
@@ -107,7 +108,7 @@ function cargarClientas() {
                 document.getElementById("t").innerText = `Total Transferencias: 0`;
                 document.getElementById("e").innerText = `Total Efectivo: 0`;
                 document.getElementById("p").innerText = `Total Propinas: 0`;
-                clientasList.innerHTML = '<tr><td colspan="10">No se encontraron citas.</td></tr>';
+                clientasList.innerHTML = '<tr><td colspan="15">No se encontraron citas.</td></tr>';
                 prevBtn.disabled = true;
                 nextBtn.disabled = true;
             }
@@ -123,7 +124,7 @@ function cargarClientas() {
     xhr.send();
 }
 
-document.getElementById('exportarExcelBtn').addEventListener('click', function() {
+document.getElementById('exportarExcelBtn').addEventListener('click', function () {
     // Obtener las fechas de los campos de fecha
     var dateOne = document.getElementById('dateOne').value;
     var dateTwo = document.getElementById('dateTwo').value;
@@ -137,7 +138,7 @@ document.getElementById('exportarExcelBtn').addEventListener('click', function()
     window.location.href = url;
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Obtener la fecha local actual
     var today = new Date();
     var year = today.getFullYear();
@@ -146,17 +147,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Formatear la fecha en 'YYYY-MM-DD'
     var formattedToday = `${year}-${month}-${day}`;
-    
+
     // Asignar la fecha a los campos de fecha
     document.getElementById('dateOne').value = formattedToday;
     document.getElementById('dateTwo').value = formattedToday;
 });
 function editar(id) {
-  var url = "./tabla.html";
-  url += "?id=" + id;
-  var nombreVentana = "ventanaEditar"; // Nombre para la ventana (opcional)
-  var opciones = "width=800,height=600,scrollbars=yes,resizable=yes"; // Opciones para la ventana
-  window.open(url, nombreVentana, opciones);
+    var url = "./tabla.html";
+    url += "?id=" + id;
+    var nombreVentana = "ventanaEditar"; // Nombre para la ventana (opcional)
+    var opciones = "width=800,height=600,scrollbars=yes,resizable=yes"; // Opciones para la ventana
+    window.open(url, nombreVentana, opciones);
 }
 
 function eliminar(id) {
@@ -176,7 +177,7 @@ function eliminar(id) {
             xhr.open('POST', 'php/eliminar_cita.php', true);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200) {
                     const response = JSON.parse(xhr.responseText);
                     if (response.success) {
@@ -218,13 +219,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'php/consulta_colaboradoras_activas.php', true);
 
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
-                
+
                 if (response.success) {
                     const colaboradoras = response.data;
-                    
+
                     colaboradoras.forEach(cita => {
                         const option = document.createElement('option');
                         option.value = cita.idcolaboradora;
@@ -240,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             console.error('Error de red al cargar los municipios');
         };
 
@@ -259,7 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'php/consulta_clientas_activas.php', true);
 
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
 
@@ -292,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             console.error('Error de red al cargar las clientas');
         };
 
@@ -302,10 +303,10 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input', () => {
             const query = input.value.toLowerCase();
             suggestions.innerHTML = '';
-    
+
             if (query) {
                 const filteredClientas = clientas.filter(clienta => clienta.nombre.toLowerCase().includes(query));
-    
+
                 filteredClientas.forEach(clienta => {
                     const div = document.createElement('div');
                     div.textContent = clienta.nombre;
@@ -321,13 +322,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 select.value = '';
             }
         });
-    
+
         document.addEventListener('click', (e) => {
             if (!input.contains(e.target) && !suggestions.contains(e.target)) {
                 suggestions.innerHTML = '';
             }
         });
-    }    
+    }
 
     cargaClientas();
 });
