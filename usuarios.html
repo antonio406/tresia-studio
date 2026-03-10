@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios - Tresia Studio</title>
+    <link rel="stylesheet" href="styles/agregaclienta.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/agrega_usuario.js" defer></script>
+    <style>
+        .permisos-container {
+            margin-top: 15px;
+            background-color: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .permisos-container h3 {
+            text-align: center;
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .permisos-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .permisos-table th {
+            background-color: #d31fc4;
+            color: #fff;
+            padding: 8px;
+            font-size: 13px;
+            text-align: center;
+        }
+        .permisos-table td {
+            padding: 6px 8px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            font-size: 13px;
+            color: #fff;
+        }
+        .permisos-table td:first-child {
+            text-align: left;
+            font-weight: bold;
+        }
+        .permisos-table input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #ff007f;
+        }
+        .permisos-table tr:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        .btn-select-all {
+            background-color: #9b59b6;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-bottom: 10px;
+            transition: background-color 0.3s;
+        }
+        .btn-select-all:hover {
+            background-color: #8e44ad;
+        }
+        .password-note {
+            font-size: 11px;
+            color: #ffd700;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <div class="logo">TRESIA STUDIO</div>
+        <ul class="nav-links">
+            <li><a href="home.php">Inicio</a></li>
+            <li class="dropdown">
+                <a href="#">Citas</a>
+                <ul class="sub-menu">
+                    <li><a href="tabla.html">Registra Cita</a></li>
+                    <li><a href="tabla3.php">Consulta Citas</a></li>
+                    <li><a href="agenda.html">Agenda de Citas</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Clientas</a>
+                <ul class="sub-menu">
+                    <li><a href="agrega_cliente.html">Registra Clientas</a></li>
+                    <li><a href="consulta_cllientes.html">Consulta Clientas</a></li>
+                    <li><a href="cumpleaños.html">Cumpleaños Clientas</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Colaboradoras</a>
+                <ul class="sub-menu">
+                    <li><a href="colaboradoras.html">Registra Colaboradoras</a></li>
+                    <li><a href="consulta_colaboradoras.php">Consulta Colaboradoras</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Servicios</a>
+                <ul class="sub-menu">
+                    <li><a href="servicios.html">Agrega Servicio</a></li>
+                    <li><a href="consulta_servicios.html">Consulta Servicios</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Municipios</a>
+                <ul class="sub-menu">
+                    <li><a href="municipios.html">Municipios</a></li>
+                    <li><a href="consulta_municipios.html">Consulta Municipios</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Gastos</a>
+                <ul class="sub-menu">
+                    <li><a href="gastos.html">Agrega Gasto</a></li>
+                    <li><a href="consulta_gastos.php">Consulta Gastos</a></li>
+                    <li><a href="gastos_totales.php">Consulta Gastos Totales</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Inventario</a>
+                <ul class="sub-menu">
+                    <li><a href="agrega_producto.html">Agrega Productos</a></li>
+                    <li><a href="consulta_productos.html">Consulta Productos</a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Usuarios</a>
+                <ul class="sub-menu">
+                    <li><a href="usuarios.html">Registra Usuario</a></li>
+                    <li><a href="consulta_usuarios_page.php">Consulta Usuarios</a></li>
+                </ul>
+            </li>
+            <li><a href="logout.php">Salir</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <div class="form-container" style="max-width: 600px;">
+            <h2 id="formTitle">Registrar Usuario</h2>
+            <form id="usuarioForm">
+                <table>
+                    <tr>
+                        <th>Usuario</th>
+                        <td><input type="text" name="user" id="user" required maxlength="10"></td>
+                    </tr>
+                    <tr>
+                        <th>Contraseña</th>
+                        <td>
+                            <input type="password" name="password" id="password" required maxlength="50">
+                            <span class="password-note" id="passwordNote">Dejar vacío para no modificar</span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Nombre</th>
+                        <td><input type="text" name="name" id="name" required maxlength="50"></td>
+                    </tr>
+                    <tr>
+                        <th>Apellido Paterno</th>
+                        <td><input type="text" name="apellidop" id="apellidop" required maxlength="50"></td>
+                    </tr>
+                    <tr>
+                        <th>Apellido Materno</th>
+                        <td><input type="text" name="apellidom" id="apellidom" required maxlength="50"></td>
+                    </tr>
+                    <tr>
+                        <th>Rol</th>
+                        <td>
+                            <select name="rol" id="rol">
+                                <option value="usuario">Usuario</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+
+                <!-- Sección de Permisos -->
+                <div class="permisos-container">
+                    <h3>Permisos por Módulo</h3>
+                    <button type="button" class="btn-select-all" id="btnSelectAll">✓ Seleccionar Todos</button>
+                    <button type="button" class="btn-select-all" id="btnDeselectAll" style="background-color: #e74c3c;">✗ Quitar Todos</button>
+                    <table class="permisos-table">
+                        <thead>
+                            <tr>
+                                <th>Módulo</th>
+                                <th>Ver</th>
+                                <th>Crear</th>
+                                <th>Editar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="permisosBody">
+                            <tr>
+                                <td>Citas</td>
+                                <td><input type="checkbox" data-modulo="citas" data-accion="ver"></td>
+                                <td><input type="checkbox" data-modulo="citas" data-accion="crear"></td>
+                                <td><input type="checkbox" data-modulo="citas" data-accion="editar"></td>
+                                <td><input type="checkbox" data-modulo="citas" data-accion="eliminar"></td>
+                            </tr>
+                            <tr>
+                                <td>Clientas</td>
+                                <td><input type="checkbox" data-modulo="clientas" data-accion="ver"></td>
+                                <td><input type="checkbox" data-modulo="clientas" data-accion="crear"></td>
+                                <td><input type="checkbox" data-modulo="clientas" data-accion="editar"></td>
+                                <td><input type="checkbox" data-modulo="clientas" data-accion="eliminar"></td>
+                            </tr>
+                            <tr>
+                                <td>Colaboradoras</td>
+                                <td><input type="checkbox" data-modulo="colaboradoras" data-accion="ver"></td>
+                                <td><input type="checkbox" data-modulo="colaboradoras" data-accion="crear"></td>
+                                <td><input type="checkbox" data-modulo="colaboradoras" data-accion="editar"></td>
+                                <td><input type="checkbox" data-modulo="colaboradoras" data-accion="eliminar"></td>
+                            </tr>
+                            <tr>
+                                <td>Servicios</td>
+                                <td><input type="checkbox" data-modulo="servicios" data-accion="ver"></td>
+                                <td><input type="checkbox" data-modulo="servicios" data-accion="crear"></td>
+                                <td><input type="checkbox" data-modulo="servicios" data-accion="editar"></td>
+                                <td><input type="checkbox" data-modulo="servicios" data-accion="eliminar"></td>
+                            </tr>
+                            <tr>
+                                <td>Municipios</td>
+                                <td><input type="checkbox" data-modulo="municipios" data-accion="ver"></td>
+                                <td><input type="checkbox" data-modulo="municipios" data-accion="crear"></td>
+                                <td><input type="checkbox" data-modulo="municipios" data-accion="editar"></td>
+                                <td><input type="checkbox" data-modulo="municipios" data-accion="eliminar"></td>
+                            </tr>
+                            <tr>
+                                <td>Gastos</td>
+                                <td><input type="checkbox" data-modulo="gastos" data-accion="ver"></td>
+                                <td><input type="checkbox" data-modulo="gastos" data-accion="crear"></td>
+                                <td><input type="checkbox" data-modulo="gastos" data-accion="editar"></td>
+                                <td><input type="checkbox" data-modulo="gastos" data-accion="eliminar"></td>
+                            </tr>
+                            <tr>
+                                <td>Inventario</td>
+                                <td><input type="checkbox" data-modulo="inventario" data-accion="ver"></td>
+                                <td><input type="checkbox" data-modulo="inventario" data-accion="crear"></td>
+                                <td><input type="checkbox" data-modulo="inventario" data-accion="editar"></td>
+                                <td><input type="checkbox" data-modulo="inventario" data-accion="eliminar"></td>
+                            </tr>
+                            <tr>
+                                <td>Usuarios</td>
+                                <td><input type="checkbox" data-modulo="usuarios" data-accion="ver"></td>
+                                <td><input type="checkbox" data-modulo="usuarios" data-accion="crear"></td>
+                                <td><input type="checkbox" data-modulo="usuarios" data-accion="editar"></td>
+                                <td><input type="checkbox" data-modulo="usuarios" data-accion="eliminar"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <input type="submit" value="Guardar" id="submitBtn" class="submit-btn">
+                <div id="message"></div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

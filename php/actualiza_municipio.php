@@ -1,6 +1,13 @@
 <?php
 header('Content-Type: application/json');
 include('db.php');
+include('permisos.php');
+session_start();
+
+if (!tienePermiso('municipios', 'editar')) {
+    echo json_encode(['success' => false, 'message' => 'No tiene permisos para editar municipios.']);
+    exit;
+}
 
 // Obtener los datos del formulario
 $id = $_POST['id']; // Asegúrate de recibir el ID de la colaboradora

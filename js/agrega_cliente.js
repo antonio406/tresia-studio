@@ -6,13 +6,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'php/consulta_municipios.php', true);
 
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
-                
+
                 if (response.success) {
                     const municipios = response.data;
-                    
+
                     municipios.forEach(municipio => {
                         const option = document.createElement('option');
                         option.value = municipio.idmunicipio;
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             console.error('Error de red al cargar los municipios');
         };
 
@@ -58,11 +58,11 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('formTitle').textContent = 'Registrar Clienta';
     }
 
-    loginForm.addEventListener('submit', function(event) {
+    loginForm.addEventListener('submit', function (event) {
         event.preventDefault();
 
         const formData = new FormData();
-        formData.append('id',urlParams.get('id'));
+        formData.append('id', urlParams.get('id'));
         formData.append('nombre', document.getElementById('nombre').value);
         formData.append('fecha', document.getElementById('fecha').value);
         formData.append('edad', document.getElementById('edad').value);
@@ -113,8 +113,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const xhr = new XMLHttpRequest();
         const url = id ? 'php/actualiza_clienta.php' : 'php/agrega_clienta.php'; // Cambia la URL según el modo
         xhr.open('POST', url, true);
-       
-        xhr.onload = function() {
+
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 if (response.success) {
@@ -154,10 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-window.onload = function() {
+window.onload = function () {
     const urlParams = new URLSearchParams(window.location.search);
     const id = urlParams.get('id');
-    
+
     if (id) {
         // Cambiar el título y el texto del botón para el modo de edición
         document.getElementById('formTitle').textContent = 'Actualizar Clienta';
@@ -179,7 +179,7 @@ function cargarDatosFormulario(id) {
     const xhr = new XMLHttpRequest();
     xhr.open('GET', `php/consulta_clienta_actualizar.php?id=${encodeURIComponent(id)}`, true);
 
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             console.log(JSON.stringify(response)); // Verifica la estructura de la respuesta
@@ -198,7 +198,7 @@ function cargarDatosFormulario(id) {
                     selectValueIfExists('sexo', clienta.sexo);
 
                     document.getElementById('ocupacion').value = clienta.ocupacion;
-                    document.getElementById('colonia').value =  clienta.colonia;
+                    document.getElementById('colonia').value = clienta.colonia;
                     document.getElementById('calle').value = clienta.calle;
                     document.getElementById('cp').value = clienta.cp;
                     document.getElementById('idmunicipio').value = clienta.idmunicipio;
@@ -210,7 +210,7 @@ function cargarDatosFormulario(id) {
                     document.getElementById('saber_nosotros').value = clienta.saber_nosotros;
                     document.getElementById('p_recomendadas').value = clienta.p_recomendadas;
                     document.getElementById('observaciones').value = clienta.observaciones;
-                    document.getElementById('detalle').value = clienta.descump;                    
+                    document.getElementById('detalle').value = clienta.descump;
                     document.getElementById('cameraInput').value = clienta.imagen;
                 } else {
                     console.error('No se encontraron registros.');
@@ -223,7 +223,7 @@ function cargarDatosFormulario(id) {
         }
     };
 
-    xhr.onerror = function() {
+    xhr.onerror = function () {
         console.error('Error en la solicitud AJAX');
     };
 
@@ -232,7 +232,7 @@ function cargarDatosFormulario(id) {
 
 function selectValueIfExists(selectId, value) {
     const select = document.getElementById(selectId);
-    
+
     if (select) {
         const optionToSelect = Array.from(select.options).find(option => option.value === value);
         if (optionToSelect) {

@@ -1,6 +1,13 @@
 <?php
 header('Content-Type: application/json');
 include('db.php');
+include('permisos.php');
+session_start();
+
+if (!tienePermiso('servicios', 'eliminar')) {
+    echo json_encode(['success' => false, 'message' => 'No tiene permisos para eliminar servicios.']);
+    exit;
+}
 
 // Recibir el ID de la cita a eliminar
 $id = $_POST['id'];

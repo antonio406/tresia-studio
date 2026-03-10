@@ -23,7 +23,8 @@ $sql = "SELECT
             c.transferencia,
             c.propina,
             g.total_ingresos_adicionales,
-            (c.total_citas + g.total_ingresos_adicionales - g.total_gastos) AS total_general
+            g.total_anticipos,
+            (c.total_citas + g.total_ingresos_adicionales + g.total_anticipos - g.total_gastos) AS total_general
         FROM (
             SELECT COALESCE(SUM(total), 0) AS total_citas, COALESCE(SUM(transferencia), 0) as transferencia ,COALESCE(SUM(efectivo), 0)  as efectivo ,COALESCE(SUM(propina), 0) as propina
             FROM citas
@@ -32,7 +33,8 @@ $sql = "SELECT
         CROSS JOIN (
             SELECT
                 COALESCE(SUM(CASE WHEN tipo = 'gasto' THEN monto ELSE 0 END), 0) AS total_gastos,
-                COALESCE(SUM(CASE WHEN tipo = 'ingreso' THEN monto ELSE 0 END), 0) AS total_ingresos_adicionales
+                COALESCE(SUM(CASE WHEN tipo = 'ingreso' THEN monto ELSE 0 END), 0) AS total_ingresos_adicionales,
+                COALESCE(SUM(CASE WHEN tipo = 'anticipo' THEN monto ELSE 0 END), 0) AS total_anticipos
             FROM gastos
             WHERE fecha BETWEEN ? AND ?
         ) g

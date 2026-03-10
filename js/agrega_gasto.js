@@ -22,7 +22,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const fecha = document.getElementById('fecha').value;
         const descripcion = document.getElementById('descripcion').value;
-        const monto = document.getElementById('monto').value;
+        const monto_transferencia = document.getElementById('monto_transferencia').value;
+        const monto_efectivo = document.getElementById('monto_efectivo').value;
         const tipogasto = document.getElementById('tipogasto').value;
 
         const xhr = new XMLHttpRequest();
@@ -65,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
 
-        xhr.send(`fecha=${encodeURIComponent(fecha)}&monto=${encodeURIComponent(monto)}&descripcion=${encodeURIComponent(descripcion)}&id=${encodeURIComponent(id)}&tipogasto=${encodeURIComponent(tipogasto)}`);
+        xhr.send(`fecha=${encodeURIComponent(fecha)}&monto_transferencia=${encodeURIComponent(monto_transferencia)}&monto_efectivo=${encodeURIComponent(monto_efectivo)}&descripcion=${encodeURIComponent(descripcion)}&id=${encodeURIComponent(id)}&tipogasto=${encodeURIComponent(tipogasto)}`);
     });
 });
 window.onload = function() {
@@ -107,7 +108,8 @@ function cargarDatosFormulario(id) {
 
                     document.getElementById('fecha').value = clienta.fecha;
                     document.getElementById('descripcion').value = clienta.descripcion;
-                    document.getElementById('monto').value = clienta.monto;
+                    document.getElementById('monto_transferencia').value = clienta.monto_transferencia;
+                    document.getElementById('monto_efectivo').value = clienta.monto_efectivo;
                     document.getElementById('tipogasto').value = clienta.tipo;
                 } else {
                     console.error('No se encontraron registros.');

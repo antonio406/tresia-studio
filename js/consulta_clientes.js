@@ -2,8 +2,8 @@ const consultarBtn = document.getElementById('consultarBtn');
 const clientasList = document.getElementById('clientasList');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
-const limit = 10; 
-let offset = 0;   
+const limit = 10;
+let offset = 0;
 
 consultarBtn.addEventListener('click', () => {
     offset = 0; // Reiniciar el desplazamiento
@@ -20,19 +20,19 @@ nextBtn.addEventListener('click', () => {
     offset += limit;
     consultaClientes();
 });
-function consultaClientes(){
-        //var fecha1 = document.getElementById("dateOne").value;
-        var clienta = document.getElementById("idclienta").value;
-        document.getElementById("img_cargando").style.visibility = "visible";
+function consultaClientes() {
+    //var fecha1 = document.getElementById("dateOne").value;
+    var clienta = document.getElementById("idclienta").value;
+    document.getElementById("img_cargando").style.visibility = "visible";
 
-        // Realizar la solicitud AJAX para obtener la lista de clientas
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', `php/consulta_clientes.php?limit=${limit}&offset=${offset}&clienta=${clienta}`, true);
-        xhr.onload = function() {
-            if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                if (response.success) {
-                    const clientas = response.data;
+    // Realizar la solicitud AJAX para obtener la lista de clientas
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', `php/consulta_clientes.php?limit=${limit}&offset=${offset}&clienta=${clienta}`, true);
+    xhr.onload = function () {
+        if (xhr.status === 200) {
+            const response = JSON.parse(xhr.responseText);
+            if (response.success) {
+                const clientas = response.data;
                 let output = '';
                 let startIndex = offset + 1; // Calcular el índice inicial
                 clientas.forEach((clienta, index) => {
@@ -70,7 +70,8 @@ function consultaClientes(){
                                 border-radius: 5px; 
                                 padding: 8px 16px; 
                                 font-size: 12px; 
-                                cursor: pointer; 
+                                cursor: ${puedeEditar ? 'pointer' : 'not-allowed'}; 
+                                opacity: ${puedeEditar ? '1' : '0.5'};
                                 transition: background-color 0.3s, color 0.3s;
                             ">
                             Editar
@@ -85,116 +86,145 @@ function consultaClientes(){
                                 border-radius: 5px; 
                                 padding: 8px 16px; 
                                 font-size: 12px; 
-                                cursor: pointer; 
+                                cursor: ${puedeEliminar ? 'pointer' : 'not-allowed'}; 
+                                opacity: ${puedeEliminar ? '1' : '0.5'};
                                 transition: background-color 0.3s, color 0.3s;
                             ">
                             Eliminar
                             </button>
                             </td>
                             <td align="center">
-                                <label class="switch">
+                                <label class="switch" style="opacity: ${puedeEditar ? '1' : '0.5'}; cursor: ${puedeEditar ? 'pointer' : 'not-allowed'};">
                                     <input type="checkbox" ${clienta.estatus == 1 ? 'checked' : ''} onclick="toggleStatus(${clienta.idclienta}, this)">
                                     <span class="slider"></span>
                                 </label>
                             </td>
                         </tr>
                         `;
-                    });
-
-                    clientasList.innerHTML = output;
-                    document.getElementById("img_cargando").style.visibility = "hidden";
-                    // Manejar habilitación/deshabilitación de botones de paginación
-                    prevBtn.disabled = offset <= 0;
-                    nextBtn.disabled = offset + limit >= response.total;
-                } else {
-                    document.getElementById("img_cargando").style.visibility = "hidden";
-                    clientasList.innerHTML = '<tr><td colspan="10">No se encontraron Clientas.</td></tr>';
-                    prevBtn.disabled = true;
-                    nextBtn.disabled = true;
-                }
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error en el servidor',
-                    text: 'Hubo un problema al obtener la lista de clientas.',
-                    confirmButtonColor: '#d63384'
                 });
+
+                clientasList.innerHTML = output;
+                document.getElementById("img_cargando").style.visibility = "hidden";
+                // Manejar habilitación/deshabilitación de botones de paginación
+                prevBtn.disabled = offset <= 0;
+                nextBtn.disabled = offset + limit >= response.total;
+            } else {
+                document.getElementById("img_cargando").style.visibility = "hidden";
+                clientasList.innerHTML = '<tr><td colspan="10">No se encontraron Clientas.</td></tr>';
+                prevBtn.disabled = true;
+                nextBtn.disabled = true;
             }
-        };
-        xhr.send();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error en el servidor',
+                text: 'Hubo un problema al obtener la lista de clientas.',
+                confirmButtonColor: '#d63384'
+            });
+        }
+    };
+    xhr.send();
 }
 // document.addEventListener('DOMContentLoaded', function() {
 //     var today = new Date().toISOString().split('T')[0];
-    
+
 //     document.getElementById('dateOne').value = today;
 //     document.getElementById('dateTwo').value = today;
 // });
 function editar(id) {
+    if (!puedeEditar) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Acceso denegado',
+            text: 'No tienes permisos para editar clientas.',
+            confirmButtonColor: '#d63384'
+        });
+        return;
+    }
     var url = "./agrega_cliente.html";
     url += "?id=" + id;
     var nombreVentana = "ventanaEditar"; // Nombre para la ventana (opcional)
     var opciones = "width=800,height=600,scrollbars=yes,resizable=yes"; // Opciones para la ventana
     window.open(url, nombreVentana, opciones);
-  }
-  
-  function eliminar(id) {
-      Swal.fire({
-          title: '¿Estás seguro?',
-          text: '¡No podrás revertir esta acción!',
-          icon: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#d63384',
-          cancelButtonColor: '#6c757d',
-          confirmButtonText: 'Sí, eliminar',
-          cancelButtonText: 'Cancelar'
-      }).then((result) => {
-          if (result.isConfirmed) {
-              // El usuario confirmó la eliminación
-              const xhr = new XMLHttpRequest();
-              xhr.open('POST', 'php/elimina_clienta.php', true);
-              xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-  
-              xhr.onload = function() {
-                  if (xhr.status === 200) {
-                      const response = JSON.parse(xhr.responseText);
-                      if (response.success) {
-                          Swal.fire({
-                              icon: 'success',
-                              title: '¡Se eliminó correctamente la clienta!',
-                              text: '¡Clienta Eliminada!',
-                              confirmButtonColor: '#d63384'
-                          }).then(() => {
-                            consultaClientes(); 
-                          });
-                      } else {
-                          Swal.fire({
-                              icon: 'Clienta Con Citas',
-                              title: 'No se pudo realizar la accion',
-                              text: response.message,
-                              confirmButtonColor: '#d63384'
-                          });
-                      }
-                  } else {
-                      Swal.fire({
-                          icon: 'error',
-                          title: 'Error en el servidor',
-                          text: 'Hubo un problema al procesar su solicitud.',
-                          confirmButtonColor: '#d63384'
-                      });
-                  }
-              };
-              xhr.send(`id=${encodeURIComponent(id)}`);
-          }
-      });
-  }
+}
 
-  function toggleStatus(idclienta, checkbox) {
+function eliminar(id) {
+    if (!puedeEliminar) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Acceso denegado',
+            text: 'No tienes permisos para eliminar clientas.',
+            confirmButtonColor: '#d63384'
+        });
+        return;
+    }
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: '¡No podrás revertir esta acción!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d63384',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // El usuario confirmó la eliminación
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'php/elimina_clienta.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Se eliminó correctamente la clienta!',
+                            text: '¡Clienta Eliminada!',
+                            confirmButtonColor: '#d63384'
+                        }).then(() => {
+                            consultaClientes();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'Clienta Con Citas',
+                            title: 'No se pudo realizar la accion',
+                            text: response.message,
+                            confirmButtonColor: '#d63384'
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error en el servidor',
+                        text: 'Hubo un problema al procesar su solicitud.',
+                        confirmButtonColor: '#d63384'
+                    });
+                }
+            };
+            xhr.send(`id=${encodeURIComponent(id)}`);
+        }
+    });
+}
+
+function toggleStatus(idclienta, checkbox) {
+    if (!puedeEditar) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Acceso denegado',
+            text: 'No tienes permisos para editar clientas.',
+            confirmButtonColor: '#d63384'
+        });
+        checkbox.checked = !checkbox.checked;
+        return;
+    }
     const estatus = checkbox.checked ? 1 : 0;
 
     const xhr = new XMLHttpRequest();
     xhr.open('POST', 'php/actualiza_status_clienta.php', true);
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    xhr.onload = function() {
+    xhr.onload = function () {
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
             if (!response.success) {
@@ -204,7 +234,7 @@ function editar(id) {
                     text: 'No se pudo actualizar el estatus.',
                     confirmButtonColor: '#d63384'
                 });
-                checkbox.checked = !checkbox.checked; 
+                checkbox.checked = !checkbox.checked;
             }
         } else {
             Swal.fire({
@@ -213,7 +243,7 @@ function editar(id) {
                 text: 'Hubo un problema al actualizar el estatus.',
                 confirmButtonColor: '#d63384'
             });
-            checkbox.checked = !checkbox.checked; 
+            checkbox.checked = !checkbox.checked;
         }
     };
     xhr.send(`idclienta=${idclienta}&estatus=${estatus}`);
@@ -235,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const xhr = new XMLHttpRequest();
         xhr.open('GET', 'php/consulta_clientas_activas.php', true);
 
-        xhr.onload = function() {
+        xhr.onload = function () {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
 
@@ -268,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        xhr.onerror = function() {
+        xhr.onerror = function () {
             console.error('Error de red al cargar las clientas');
         };
 
@@ -278,10 +308,10 @@ document.addEventListener('DOMContentLoaded', () => {
         input.addEventListener('input', () => {
             const query = input.value.toLowerCase();
             suggestions.innerHTML = '';
-    
+
             if (query) {
                 const filteredClientas = clientas.filter(clienta => clienta.nombre.toLowerCase().includes(query));
-    
+
                 filteredClientas.forEach(clienta => {
                     const div = document.createElement('div');
                     div.textContent = clienta.nombre;
@@ -297,13 +327,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 select.value = '';
             }
         });
-    
+
         document.addEventListener('click', (e) => {
             if (!input.contains(e.target) && !suggestions.contains(e.target)) {
                 suggestions.innerHTML = '';
             }
         });
-    }    
+    }
 
     cargaClientas();
 });

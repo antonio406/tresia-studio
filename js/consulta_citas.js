@@ -26,6 +26,45 @@ function cargarClientas() {
     var fecha2 = document.getElementById("dateTwo").value;
     var clientaa = document.getElementById("idclienta").value;
     var colaboradora = document.getElementById('idcolaboradora').value;
+
+    if (tieneCorte && !isAdmin) {
+        const d1 = new Date(fecha1 + 'T00:00:00');
+        const d2 = new Date(fecha2 + 'T00:00:00');
+
+        // Función para obtener el lunes de la semana de una fecha dada
+        function getMonday(d) {
+            d = new Date(d);
+            var day = d.getDay(),
+                diff = d.getDate() - day + (day == 0 ? -6 : 1);
+            return new Date(d.setDate(diff));
+        }
+
+        const monday1 = getMonday(d1).toDateString();
+        const monday2 = getMonday(d2).toDateString();
+
+        if (monday1 !== monday2) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Rango no permitido',
+                text: 'Con el permiso de corte solo puedes consultar fechas dentro de una misma semana (Lunes a Sábado).',
+                confirmButtonColor: '#d63384'
+            });
+            document.getElementById("img_cargando").style.visibility = "hidden";
+            return;
+        }
+
+        if (d1.getDay() === 0 || d2.getDay() === 0) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Domingo no permitido',
+                text: 'Las consultas de corte no incluyen domingos.',
+                confirmButtonColor: '#d63384'
+            });
+            document.getElementById("img_cargando").style.visibility = "hidden";
+            return;
+        }
+    }
+
     document.getElementById("img_cargando").style.visibility = "visible";
 
     const xhr = new XMLHttpRequest();
@@ -61,13 +100,12 @@ function cargarClientas() {
                                 border-radius: 5px; 
                                 padding: 8px 16px; 
                                 font-size: 12px; 
-                                cursor: pointer; 
+                                cursor: ${puedeEditar ? 'pointer' : 'not-allowed'}; 
+                                opacity: ${puedeEditar ? '1' : '0.5'};
                                 transition: background-color 0.3s, 
                                 color 0.3s;">
                                 Editar
                                 </button>
-                            </td>
-                            </button>
                             </td>
                             <td align="center">
                              <button onclick="eliminar(${clienta.idcitas});" 
@@ -78,7 +116,8 @@ function cargarClientas() {
                                 border-radius: 5px; 
                                 padding: 8px 16px; 
                                 font-size: 12px; 
-                                cursor: pointer; 
+                                cursor: ${puedeEliminar ? 'pointer' : 'not-allowed'}; 
+                                opacity: ${puedeEliminar ? '1' : '0.5'};
                                 transition: background-color 0.3s, color 0.3s;">
                             Eliminar
                             </button>
@@ -141,18 +180,44 @@ document.getElementById('exportarExcelBtn').addEventListener('click', function (
 document.addEventListener('DOMContentLoaded', function () {
     // Obtener la fecha local actual
     var today = new Date();
-    var year = today.getFullYear();
-    var month = String(today.getMonth() + 1).padStart(2, '0'); // Los meses en JavaScript van de 0 a 11
-    var day = String(today.getDate()).padStart(2, '0');
 
-    // Formatear la fecha en 'YYYY-MM-DD'
-    var formattedToday = `${year}-${month}-${day}`;
+    if (tieneCorte && !isAdmin) {
+        // Para el permiso de corte, buscamos el Lunes y Sábado más cercanos (semana anterior o actual)
+        // Por defecto: Lunes de esta semana a Sábado de esta semana (o semana anterior si hoy es domingo/lunes temprano)
+        var day = today.getDay();
+        var diffToMonday = today.getDate() - day + (day == 0 ? -6 : 1);
+        var monday = new Date(today.setDate(diffToMonday));
+        var saturday = new Date(monday);
+        saturday.setDate(monday.getDate() + 5);
 
-    // Asignar la fecha a los campos de fecha
-    document.getElementById('dateOne').value = formattedToday;
-    document.getElementById('dateTwo').value = formattedToday;
+        var formatDate = (d) => {
+            var y = d.getFullYear();
+            var m = String(d.getMonth() + 1).padStart(2, '0');
+            var day = String(d.getDate()).padStart(2, '0');
+            return `${y}-${m}-${day}`;
+        };
+
+        document.getElementById('dateOne').value = formatDate(monday);
+        document.getElementById('dateTwo').value = formatDate(saturday);
+    } else {
+        var year = today.getFullYear();
+        var month = String(today.getMonth() + 1).padStart(2, '0');
+        var day = String(today.getDate()).padStart(2, '0');
+        var formattedToday = `${year}-${month}-${day}`;
+        document.getElementById('dateOne').value = formattedToday;
+        document.getElementById('dateTwo').value = formattedToday;
+    }
 });
 function editar(id) {
+    if (!puedeEditar) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Acceso denegado',
+            text: 'No tienes permisos para editar citas.',
+            confirmButtonColor: '#d63384'
+        });
+        return;
+    }
     var url = "./tabla.html";
     url += "?id=" + id;
     var nombreVentana = "ventanaEditar"; // Nombre para la ventana (opcional)
@@ -161,6 +226,15 @@ function editar(id) {
 }
 
 function eliminar(id) {
+    if (!puedeEliminar) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Acceso denegado',
+            text: 'No tienes permisos para eliminar citas.',
+            confirmButtonColor: '#d63384'
+        });
+        return;
+    }
     Swal.fire({
         title: '¿Estás seguro?',
         text: '¡No podrás revertir esta acción!',

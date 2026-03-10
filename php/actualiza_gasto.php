@@ -1,16 +1,25 @@
 <?php
 header('Content-Type: application/json');
 include('db.php');
+include('permisos.php');
+session_start();
+
+if (!tienePermiso('gastos', 'editar')) {
+    echo json_encode(['success' => false, 'message' => 'No tiene permisos para editar gastos.']);
+    exit;
+}
 
 // Obtener los datos del formulario
-$id = $_POST['id']; // Asegúrate de recibir el ID de la colaboradora
+$id = $_POST['id'];
 $fecha = $_POST['fecha'];
 $descripcion = $_POST['descripcion'];
-$monto = $_POST['monto'];
+$monto_transferencia = $_POST['monto_transferencia'];
+$monto_efectivo = $_POST['monto_efectivo'];
+$monto = $monto_transferencia + $monto_efectivo;
 $tipogasto = $_POST['tipogasto'];
 // Actualizar los datos en la tabla
 $sql = "UPDATE gastos 
-        SET fecha=?, descripcion=? ,monto=? ,tipo=? 
+        SET fecha=?, descripcion=?, monto=?, monto_transferencia=?, monto_efectivo=?, tipo=? 
         WHERE idgasto =?";
 $stmt = $conn->prepare($sql);
 
@@ -19,7 +28,7 @@ if (!$stmt) {
     die(json_encode(['success' => false, 'message' => 'Error al preparar la consulta.']));
 }
 
-$stmt->bind_param('ssssi', $fecha, $descripcion, $monto, $tipogasto, $id);
+$stmt->bind_param('ssdddsi', $fecha, $descripcion, $monto, $monto_transferencia, $monto_efectivo, $tipogasto, $id);
 
 if ($stmt->execute()) {
     echo json_encode(['success' => true]);

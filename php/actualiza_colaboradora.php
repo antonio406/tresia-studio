@@ -1,6 +1,13 @@
 <?php
 header('Content-Type: application/json');
 include('db.php');
+include('permisos.php');
+session_start();
+
+if (!tienePermiso('colaboradoras', 'editar')) {
+    echo json_encode(['success' => false, 'message' => 'No tiene permisos para editar colaboradoras.']);
+    exit;
+}
 // Directorio de subida
 $uploadDir = 'uploads2/';
 $imageFile = null;

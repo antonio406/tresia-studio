@@ -2,8 +2,8 @@ const consultarBtn = document.getElementById('consultarBtn');
 const clientasList = document.getElementById('clientasList');
 const prevBtn = document.getElementById('prevBtn');
 const nextBtn = document.getElementById('nextBtn');
-const limit = 10; 
-let offset = 0;   
+const limit = 10;
+let offset = 0;
 
 consultarBtn.addEventListener('click', () => {
     offset = 0; // Reiniciar el desplazamiento
@@ -27,7 +27,7 @@ function consulta_gastos() {
 
     const xhr = new XMLHttpRequest();
     xhr.open('GET', `php/gastos_totales_generales.php?fecha1=${fecha1}&fecha2=${fecha2}&offset=${offset}&limit=${limit}`, true);
-    xhr.onload = function() {
+    xhr.onload = function () {
         document.getElementById("img_cargando").style.visibility = "hidden";
         if (xhr.status === 200) {
             const response = JSON.parse(xhr.responseText);
@@ -35,11 +35,11 @@ function consulta_gastos() {
                 const clientas = response.data;
                 if (clientas.length === 0 && offset > 0) {
                     offset = 0;
-                    consulta_gastos(); 
-                    return; 
+                    consulta_gastos();
+                    return;
                 }
                 let output = '';
-                let startIndex = offset + 1; 
+                let startIndex = offset + 1;
                 clientas.forEach((clienta, index) => {
                     output += `
                         <tr>
@@ -50,6 +50,7 @@ function consulta_gastos() {
                             <td>$${clienta.total_citas}</td>
                             <td>$${clienta.total_gastos}</td>
                             <td>$${clienta.total_ingresos_adicionales}</td>
+                            <td>$${clienta.total_anticipos}</td>
                             <td>$${clienta.total_general}</td>
                         </tr>
                     `;
@@ -75,13 +76,13 @@ function consulta_gastos() {
     };
     xhr.send();
 }
-document.getElementById('exportarExcelBtn').addEventListener('click', function() {
+document.getElementById('exportarExcelBtn').addEventListener('click', function () {
     const fecha1 = document.getElementById('dateOne').value;
     const fecha2 = document.getElementById('dateTwo').value;
     window.location.href = `php/exportar_gastos_totales.php?fecha1=${encodeURIComponent(fecha1)}&fecha2=${encodeURIComponent(fecha2)}`;
 });
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Obtener la fecha local actual
     var today = new Date();
     var year = today.getFullYear();
@@ -90,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Formatear la fecha en 'YYYY-MM-DD'
     var formattedToday = `${year}-${month}-${day}`;
-    
+
     // Asignar la fecha a los campos de fecha
     document.getElementById('dateOne').value = formattedToday;
     document.getElementById('dateTwo').value = formattedToday;

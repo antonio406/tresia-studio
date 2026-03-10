@@ -24,6 +24,10 @@ $totalgasto2 = "SELECT COALESCE(SUM(monto), 0) AS gasto FROM gastos WHERE fecha 
 $totalResult3 = $conn->query($totalgasto2);
 $gasto = $totalResult3->fetch_assoc()['gasto'];
 
+$totalanticipo = "SELECT COALESCE(SUM(monto), 0) AS anticipo FROM gastos WHERE fecha BETWEEN '$fecha1' AND '$fecha2' and tipo = 'anticipo';";
+$totalResult4 = $conn->query($totalanticipo);
+$anticipo = $totalResult4->fetch_assoc()['anticipo'];
+
 if ($result->num_rows > 0) {
     $clientas = [];
     // Obtener los datos de cada fila
@@ -31,9 +35,9 @@ if ($result->num_rows > 0) {
         $clientas[] = $row;
     }
 
-    echo json_encode(['success' => true, 'data' => $clientas, 'total' => $total, 'ingreso' => $ingreso, 'gasto' => $gasto]);
+    echo json_encode(['success' => true, 'data' => $clientas, 'total' => $total, 'ingreso' => $ingreso, 'gasto' => $gasto, 'anticipo' => $anticipo]);
 } else {
-    echo json_encode(['success' => false, 'message' => 'No se encontraron clientas.']);
+    echo json_encode(['success' => false, 'message' => 'No se encontraron clientas.', 'ingreso' => $ingreso, 'gasto' => $gasto, 'anticipo' => $anticipo]);
 }
 
 $conn->close();

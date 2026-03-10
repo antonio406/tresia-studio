@@ -1,9 +1,13 @@
 <?php
 session_start(); 
+include('php/permisos.php');
 
-$usuario_restringido = 'Tresia Studio';
+if (!isset($_SESSION['usuario'])) {
+    header('Location: index.html');
+    exit();
+}
 
-if (!isset($_SESSION['name']) || $_SESSION['name'] === $usuario_restringido) {
+if (!tienePermiso('gastos', 'ver')) {
     header('Location: alert.php');
     exit();
 }
@@ -20,65 +24,7 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] === $usuario_restringido) {
     <title>Consulta de Clientas</title>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">TRESIA STUDIO</div>
-        <ul class="nav-links">
-            <li><a href="home.php">Inicio</a></li>
-            <li class="dropdown">
-                <a href="#">Citas</a>
-                <ul class="sub-menu">
-                    <li><a href="tabla.html">Registra Cita</a></li>
-                    <li><a href="tabla3.php">Consulta Citas</a></li>
-                    <li><a href="agenda.html">Agenda de Citas</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Clientas</a>
-                <ul class="sub-menu">
-                    <li><a href="agrega_cliente.html">Registra Clientas</a></li>
-                    <li><a href="consulta_cllientes.html">Consulta Clientas</a></li>
-                    <li><a href="cumpleaños.html">Cumpleaños Clientas</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Colaboradoras</a>
-                <ul class="sub-menu">
-                    <li><a href="colaboradoras.html">Registra Colaboradoras</a></li>
-                    <li><a href="consulta_colaboradoras.php">Consulta Colaboradoras</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Servicios</a>
-                <ul class="sub-menu">
-                    <li><a href="servicios.html">Agrega Servicio</a></li>
-                    <li><a href="consulta_servicios.html">Consulta Servicios</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Municipios</a>
-                <ul class="sub-menu">
-                    <li><a href="municipios.html">Municipios</a></li>
-                    <li><a href="consulta_municipios.html">Consulta Municipios</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Gastos</a>
-                <ul class="sub-menu">
-                    <li><a href="gastos.html">Agrega Gasto</a></li>
-                    <li><a href="consulta_gastos.php">Consulta Gastos</a></li>
-                    <li><a href="gastos_totales.php">Consulta Gastos Totales</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Inventario</a>
-                <ul class="sub-menu">
-                    <li><a href="agrega_producto.html">Agrega Productos</a></li>
-                    <li><a href="consulta_productos.html">Consulta Productos</a></li>
-                </ul>
-            </li>
-            <li><a href="logout.php">Salir</a></li>
-        </ul>
-    </div>
+    <?php include('php/sidebar.php'); ?>
     <div class="content">
         <h2>Consulta Gastos</h2>
         <div class="search-container">
@@ -102,6 +48,7 @@ if (!isset($_SESSION['name']) || $_SESSION['name'] === $usuario_restringido) {
                     <th>Ganancias Citas</th>
                     <th>Gastos</th>
                     <th>Ingresos Adicionales</th>
+                    <th>Anticipos</th>
                     <th>Ganancia Total</th>
                 </tr>
             </thead>

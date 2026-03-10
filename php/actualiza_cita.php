@@ -2,6 +2,13 @@
 header('Content-Type: application/json');
 
 include('db.php');
+include('permisos.php');
+session_start();
+
+if (!tienePermiso('citas', 'editar')) {
+    echo json_encode(['success' => false, 'message' => 'No tiene permisos para editar citas.']);
+    exit;
+}
 
 $id = $_POST['id'];
 $dia = $_POST['dia'];

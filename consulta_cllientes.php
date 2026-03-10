@@ -1,0 +1,122 @@
+<?php
+session_start();
+include('php/permisos.php');
+
+if (!isset($_SESSION['usuario'])) {
+    header('Location: index.html');
+    exit();
+}
+
+$puedeEditar = tienePermiso('clientas', 'editar');
+$puedeEliminar = tienePermiso('clientas', 'eliminar');
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="styles/consulta.css">
+    <title>Consulta de Clientas</title>
+</head>
+<body>
+    <style>
+        #suggestions {
+            border: 1px solid #ddd;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            background: #fff;
+            color: black;
+            width: calc(100% - 2px);
+            z-index: 1000;
+        }
+        #suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        #suggestions div:hover {
+            background-color: #f0f0f0;
+            color: black;
+        }
+        #sg {
+            border: 1px solid #ddd;
+            max-height: 200px;
+            overflow-y: auto;
+            position: absolute;
+            background: #fff;
+            color: black;
+            width: calc(100% - 2px);
+            z-index: 1000;
+        }
+        #sg div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        #sg div:hover {
+            background-color: #f0f0f0;
+            color: black;
+        }
+    </style>
+    <?php include('php/sidebar.php'); ?>
+    <div class="content">
+        <h2>Datos de Clientas</h2>
+        <div class="search-container">
+            <b>Filtros de Busqueda:</b>Clienta
+                <div style="position: relative;">
+                    <input type="text" id="clientaSearch" autocomplete="off" placeholder="Buscar clienta...">
+                    <div id="suggestions"></div>
+                    <select name="idclienta" id="idclienta" style="display:none;">
+                        <!-- Opciones se llenarán aquí -->
+                    </select>
+                </div>
+            <div class="loading-container">
+                <img src="styles/cargando.gif" width="70px" height="30px" id="img_cargando" style="visibility: hidden;">
+            </div>
+        </div>
+        <button id="consultarBtn">Consultar Clientas</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Nombre</th>
+                    <th>Fecha de Rergistro</th>
+                    <th>Edad</th>
+                    <th>Sexo</th>
+                    <th>Ocupacion</th>
+                    <th>Colonia</th>
+                    <th>Calle</th>
+                    <th>Codigo Postal</th>
+                    <th>Municipio</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Número Telefónico</th>
+                    <th>Alergias</th>
+                    <th>Patologías Activas</th>
+                    <th>Lentes (Contacto/Armazón)</th>
+                    <th>¿Cómo nos conoció?</th>
+                    <th>Personas Recomendadas</th>
+                    <th>Observaciones</th>
+                    <th>Imagen Clienta</th>
+                    <th>Editar</th>
+                    <th>Eliminar</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="clientasList">
+                <!-- Las filas de la tabla se generarán dinámicamente aquí -->
+            </tbody>
+        </table>
+        <div class="pagination">
+            <button id="prevBtn" disabled>Anterior</button>
+            <button id="nextBtn" disabled>Siguiente</button>
+        </div>
+    </div>
+
+    <script>
+        const puedeEditar = <?php echo json_encode($puedeEditar); ?>;
+        const puedeEliminar = <?php echo json_encode($puedeEliminar); ?>;
+    </script>
+    <script src="js/consulta_clientes.js"></script>
+</body>
+</html>

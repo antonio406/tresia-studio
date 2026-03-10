@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
             position: relative;
             display: inline-block;
         }
+
         #photo {
             position: absolute;
             top: 0;
@@ -19,12 +21,13 @@
         }
     </style>
 </head>
+
 <body>
     <h1>Captura Foto en el Video</h1>
     <div id="videoContainer">
         <video id="video" autoplay></video>
         <canvas id="photoCanvas" style="display:none;"></canvas>
-        <img id="photo" alt="Foto capturada"/>
+        <img id="photo" alt="Foto capturada" />
     </div>
     <button id="startButton">Iniciar Cámara</button>
     <button id="captureButton">Capturar Foto</button>
@@ -67,13 +70,13 @@
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.text())
-                .then(data => {
-                    console.log('Foto guardada: ', data);
-                })
-                .catch(error => {
-                    console.error('Error al guardar la foto: ', error);
-                });
+                    .then(response => response.text())
+                    .then(data => {
+                        console.log('Foto guardada: ', data);
+                    })
+                    .catch(error => {
+                        console.error('Error al guardar la foto: ', error);
+                    });
             } else {
                 alert('No hay foto para guardar.');
             }
@@ -84,4 +87,5 @@
         saveButton.addEventListener('click', savePhoto);
     </script>
 </body>
+
 </html>

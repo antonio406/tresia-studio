@@ -88,8 +88,8 @@ function populateYearSelect() {
         const option = document.createElement('option');
         option.value = year;
         option.innerText = year;
-        if (year === 2024) {
-            option.selected = true; // Por defecto el año 2024
+        if (year === currentYear) {
+            option.selected = true; // Por defecto el año actual (2026)
         }
         yearSelect.appendChild(option);
     }
@@ -171,16 +171,17 @@ function openModal(dateKey, citas, allColaboradoras) {
 
 document.addEventListener('DOMContentLoaded', () => {
     populateYearSelect();
-    createCalendar(2024); 
+    const currentYear = new Date().getFullYear();
+    createCalendar(currentYear);
 
     const modal = document.getElementById('myModal');
     const span = document.getElementsByClassName("close")[0];
 
-    span.onclick = function() {
+    span.onclick = function () {
         modal.style.display = "none";
     }
 
-    window.onclick = function(event) {
+    window.onclick = function (event) {
         if (event.target == modal) {
             modal.style.display = "none";
         }

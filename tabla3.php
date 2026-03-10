@@ -1,13 +1,17 @@
 <?php
 session_start(); 
 header('Content-Type: text/html; charset=utf-8');
+include('php/permisos.php');
 
 // Redirigir si no está autenticado
 if (!isset($_SESSION['usuario'])) {
     header('Location: index.html'); 
     exit();
 }
-$isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario'] === 'admin';
+$isAdmin = esAdmin();
+$puedeEditar = tienePermiso('citas', 'editar');
+$puedeEliminar = tienePermiso('citas', 'eliminar');
+$tieneCorte = tienePermiso('citas', 'corte'); // Nuevo permiso especial
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -64,65 +68,7 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario'] === 'admin';
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <div class="logo">TRESIA STUDIO</div>
-        <ul class="nav-links">
-            <li><a href="home.php">Inicio</a></li>
-            <li class="dropdown">
-                <a href="#">Citas</a>
-                <ul class="sub-menu">
-                    <li><a href="tabla.html">Registra Cita</a></li>
-                    <li><a href="tabla3.php">Consulta Citas</a></li>
-                    <li><a href="agenda.html">Agenda de Citas</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Clientas</a>
-                <ul class="sub-menu">
-                    <li><a href="agrega_cliente.html">Registra Clientas</a></li>
-                    <li><a href="consulta_cllientes.html">Consulta Clientas</a></li>
-                    <li><a href="cumpleaños.html">Cumpleaños Clientas</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Colaboradoras</a>
-                <ul class="sub-menu">
-                    <li><a href="colaboradoras.html">Registra Colaboradoras</a></li>
-                    <li><a href="consulta_colaboradoras.php">Consulta Colaboradoras</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Servicios</a>
-                <ul class="sub-menu">
-                    <li><a href="servicios.html">Agrega Servicio</a></li>
-                    <li><a href="consulta_servicios.html">Consulta Servicios</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Municipios</a>
-                <ul class="sub-menu">
-                    <li><a href="municipios.html">Municipios</a></li>
-                    <li><a href="consulta_municipios.html">Consulta Municipios</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Gastos</a>
-                <ul class="sub-menu">
-                    <li><a href="gastos.html">Agrega Gasto</a></li>
-                    <li><a href="consulta_gastos.php">Consulta Gastos</a></li>
-                    <li><a href="gastos_totales.php">Consulta Gastos Totales</a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Inventario</a>
-                <ul class="sub-menu">
-                    <li><a href="agrega_producto.html">Agrega Productos</a></li>
-                    <li><a href="consulta_productos.html">Consulta Productos</a></li>
-                </ul>
-            </li>
-            <li><a href="logout.php">Salir</a></li>
-        </ul>
-    </div>
+    <?php include('php/sidebar.php'); ?>
     <div class="content">
         <h2>Consulta Citas</h2>
         <div class="search-container">
@@ -170,17 +116,17 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario'] === 'admin';
                 
             </tbody>
         </table>
-    <div id="t" class="<?php echo $isAdmin ? 'visible' : 'hidden'; ?>" style="margin-left: 812px; color: red;">
+    <div id="t" class="<?php echo ($isAdmin || $tieneCorte) ? 'visible' : 'hidden'; ?>" style="margin-left: 812px; color: red;">
     </div>
-    <div id="e" class="<?php echo $isAdmin ? 'visible' : 'hidden'; ?>" style="margin-left: 860px; color: red;">
+    <div id="e" class="<?php echo ($isAdmin || $tieneCorte) ? 'visible' : 'hidden'; ?>" style="margin-left: 860px; color: red;">
     </div>
-    <div id="p" class="<?php echo $isAdmin ? 'visible' : 'hidden'; ?>" style="margin-left: 855px; color: red;">
+    <div id="p" class="<?php echo ($isAdmin || $tieneCorte) ? 'visible' : 'hidden'; ?>" style="margin-left: 855px; color: red;">
     </div>
-    <div id="colaboradora" class="<?php echo $isAdmin ? 'visible' : 'hidden'; ?>" style="margin-left: 750px; color: red;">
+    <div id="colaboradora" class="<?php echo ($isAdmin || $tieneCorte) ? 'visible' : 'hidden'; ?>" style="margin-left: 750px; color: red;">
     </div>
-    <div id="comision" class="<?php echo $isAdmin ? 'visible' : 'hidden'; ?>" style="margin-left: 815px; color: red;">
+    <div id="comision" class="<?php echo ($isAdmin || $tieneCorte) ? 'visible' : 'hidden'; ?>" style="margin-left: 815px; color: red;">
     </div>
-    <div id="totalGlobal" class="<?php echo $isAdmin ? 'visible' : 'hidden'; ?>" style="margin-left: 860px; color: red;">
+    <div id="totalGlobal" class="<?php echo ($isAdmin || $tieneCorte) ? 'visible' : 'hidden'; ?>" style="margin-left: 860px; color: red;">
     </div>
         <div class="pagination">
             <button id="prevBtn" disabled>Anterior</button>
@@ -189,6 +135,9 @@ $isAdmin = isset($_SESSION['usuario']) && $_SESSION['usuario'] === 'admin';
     </div>
     <script>
         const isAdmin = <?php echo json_encode($isAdmin); ?>;
+        const puedeEditar = <?php echo json_encode($puedeEditar); ?>;
+        const puedeEliminar = <?php echo json_encode($puedeEliminar); ?>;
+        const tieneCorte = <?php echo json_encode($tieneCorte); ?>;
     </script>
     <script src="js/consulta_citas.js"></script>
 </body>

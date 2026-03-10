@@ -1,0 +1,37 @@
+{
+    "citas": [
+        {
+            "year": "2026",
+            "month": "3",
+            "day": "1",
+            "hora": "15:47:00",
+            "nombre": "Diana Estefania Sandoval Gonza",
+            "servicio": "Clasicas Natural Set",
+            "clienta": "Abigail Esther Gonzalez Quinta"
+        },
+        {
+            "year": "2026",
+            "month": "3",
+            "day": "1",
+            "hora": "05:00:00",
+            "nombre": "Lizbeth Prieto Ortega ",
+            "servicio": "Efecto mojado",
+            "clienta": "Abigail Esther Gonzalez Quinta"
+        },
+        {
+            "year": "2026",
+            "month": "3",
+            "day": "2",
+            "hora": "17:00:00",
+            "nombre": "Lizbeth Prieto Ortega ",
+            "servicio": "Clasicas Natural Set",
+            "clienta": "Stephanie Galvan de la Rosa"
+        }
+    ],
+    "colaboradoras": [
+        "Lizbeth Prieto Ortega ",
+        "Diana Estefania Sandoval Gonza",
+        "Mariana Jaqueline Sandoval Gon",
+        "Estefania Sandoval Gonzalez"
+    ]
+}
