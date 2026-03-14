@@ -251,8 +251,19 @@ const photo = document.getElementById('photo');
 const startButton = document.getElementById('startButton');
 const captureButton = document.getElementById('captureButton');
 const imageDataInput = document.getElementById('imageData');
+const imageUpload = document.getElementById('imageUpload');
 
 function startCamera() {
+    video.style.display = 'block';
+    photo.style.position = 'absolute';
+    photo.style.display = 'none';
+
+    // Si ya hay un stream, simplemente reproducirlo
+    if (video.srcObject) {
+        video.play();
+        return;
+    }
+
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(stream => {
             video.srcObject = stream;
@@ -268,17 +279,47 @@ function startCamera() {
             });
         });
 }
+
 function capturePhoto() {
     const context = photoCanvas.getContext('2d');
     photoCanvas.width = video.videoWidth;
     photoCanvas.height = video.videoHeight;
     context.drawImage(video, 0, 0, photoCanvas.width, photoCanvas.height);
+
     photo.src = photoCanvas.toDataURL('image/png');
     photo.style.display = 'block';
+    // Mantenemos el video visible pero pausado para que el contenedor no pierda su tamaño
+    video.pause();
+
     imageDataInput.value = photoCanvas.toDataURL('image/png');
-
 }
-
 
 startButton.addEventListener('click', startCamera);
 captureButton.addEventListener('click', capturePhoto);
+
+if (imageUpload) {
+    imageUpload.addEventListener('change', function (event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                photo.src = e.target.result;
+                photo.style.display = 'block';
+                // Cambiar a static para que tome espacio por su cuenta
+                photo.style.position = 'static';
+                photo.style.maxWidth = '300px';
+
+                video.style.display = 'none';
+                imageDataInput.value = e.target.result;
+
+                // Detener streaming de la cámara si estaba encendida
+                if (video.srcObject) {
+                    const tracks = video.srcObject.getTracks();
+                    tracks.forEach(track => track.stop());
+                    video.srcObject = null;
+                }
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+}

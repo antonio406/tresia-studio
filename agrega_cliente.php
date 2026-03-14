@@ -134,8 +134,14 @@ if (!tienePermiso('clientas', 'crear')) {
                                 <canvas id="photoCanvas" style="display:none;"></canvas>
                                 <img id="photo" alt="Foto capturada"/>
                             </div>
-                            <button type="button" id="startButton">Iniciar Cámara</button>
-                            <button type="button" id="captureButton">Capturar Foto</button>
+                            <div style="margin-top: 10px;">
+                                <button type="button" id="startButton">Iniciar Cámara</button>
+                                <button type="button" id="captureButton">Capturar Foto</button>
+                            </div>
+                            <div style="margin-top: 15px;">
+                                <label for="imageUpload" style="font-weight: bold;">O subir imagen desde archivo:</label><br>
+                                <input type="file" id="imageUpload" accept="image/*" style="margin-top: 5px;">
+                            </div>
                             <input type="hidden" id="imageData" name="imageData">
                         </td>
                     </tr>
